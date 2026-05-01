@@ -148,7 +148,6 @@ export const getAnalyticsStats = async () => {
 
 export const trackEvent = (name, params = {}) => {
   if (analytics) logEvent(analytics, name, params);
-  if (import.meta.env.DEV) console.log("[Analytics]", name, params);
 };
 
 // ─── Mock helpers for demo mode ──────────────────────────────────────────────

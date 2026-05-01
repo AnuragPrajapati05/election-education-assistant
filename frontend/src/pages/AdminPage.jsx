@@ -46,7 +46,7 @@ export default function AdminPage() {
     };
     load();
     trackEvent("admin_page_view", { uid: user?.uid });
-  }, []);
+  }, [user?.uid]);
 
   if (user?.role !== "admin") {
     return (

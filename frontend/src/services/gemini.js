@@ -1,7 +1,6 @@
 // src/services/gemini.js
 // Gemini API integration with response caching
 
-const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
 const GEMINI_MODEL = "gemini-2.0-flash";
 const API_BASE = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent`;
 
@@ -53,18 +52,46 @@ const DEMO_RESPONSES = {
   ],
 };
 
+export function getGeminiApiKey() {
+  if (typeof globalThis !== "undefined" && "__TEST_GEMINI_API_KEY__" in globalThis) {
+    return globalThis.__TEST_GEMINI_API_KEY__;
+  }
+  return import.meta.env.VITE_GEMINI_API_KEY;
+}
+
+export function normalizeLanguage(language = "en") {
+  return ["en", "hi"].includes(language) ? language : "en";
+}
+
+export function normalizePrompt(userMessage) {
+  return String(userMessage || "").trim().slice(0, 1000);
+}
+
+export function buildCacheKey(userMessage, language = "en") {
+  return `${normalizeLanguage(language)}::${normalizePrompt(userMessage).toLowerCase().slice(0, 80)}`;
+}
+
+export function isDemoMode(apiKey = getGeminiApiKey()) {
+  return !apiKey || apiKey === "your_gemini_api_key_here";
+}
+
 export async function askGemini(userMessage, language = "en", conversationHistory = []) {
-  // Build cache key from last 2 messages + language
-  const cacheKey = `${language}::${userMessage.toLowerCase().trim().slice(0, 80)}`;
+  const apiKey = getGeminiApiKey();
+  const activeLanguage = normalizeLanguage(language);
+  const prompt = normalizePrompt(userMessage);
+  if (!prompt) {
+    throw new Error("Message cannot be empty.");
+  }
+
+  const cacheKey = buildCacheKey(prompt, activeLanguage);
   const cached = responseCache.get(cacheKey);
   if (cached && Date.now() - cached.timestamp < CACHE_TTL) {
     return cached.text;
   }
 
-  // Demo mode: use canned responses
-  if (!GEMINI_API_KEY || GEMINI_API_KEY === "your_gemini_api_key_here") {
+  if (isDemoMode(apiKey)) {
     await sleep(800 + Math.random() * 600);
-    const pool = DEMO_RESPONSES[language] || DEMO_RESPONSES.en;
+    const pool = DEMO_RESPONSES[activeLanguage] || DEMO_RESPONSES.en;
     const text = pool[Math.floor(Math.random() * pool.length)];
     responseCache.set(cacheKey, { text, timestamp: Date.now() });
     return text;
@@ -75,19 +102,19 @@ export async function askGemini(userMessage, language = "en", conversationHistor
     // System context as first user turn
     {
       role: "user",
-      parts: [{ text: `SYSTEM: ${SYSTEM_PROMPT[language] || SYSTEM_PROMPT.en}` }],
+      parts: [{ text: `SYSTEM: ${SYSTEM_PROMPT[activeLanguage] || SYSTEM_PROMPT.en}` }],
     },
     { role: "model", parts: [{ text: "Understood. I'm ready to help citizens with election education." }] },
     // Conversation history (last 6 turns)
-    ...conversationHistory.slice(-6).map((m) => ({
+    ...conversationHistory.slice(-6).filter((m) => normalizePrompt(m?.content)).map((m) => ({
       role: m.role === "user" ? "user" : "model",
-      parts: [{ text: m.content }],
+      parts: [{ text: normalizePrompt(m.content) }],
     })),
     // Current message
-    { role: "user", parts: [{ text: userMessage }] },
+    { role: "user", parts: [{ text: prompt }] },
   ];
 
-  const response = await fetch(`${API_BASE}?key=${GEMINI_API_KEY}`, {
+  const response = await fetch(`${API_BASE}?key=${apiKey}`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({

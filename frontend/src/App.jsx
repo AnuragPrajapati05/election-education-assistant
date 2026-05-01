@@ -1,4 +1,4 @@
-import { useState, useEffect, lazy, Suspense } from "react";
+import { useState, lazy, Suspense } from "react";
 import { AuthProvider, useAuth } from "./context/AuthContext";
 import { LanguageProvider } from "./context/LanguageContext";
 import { AccessibilityProvider } from "./context/AccessibilityContext";
@@ -41,6 +41,9 @@ function AppContent() {
 
   return (
     <div className="app-root">
+      <a className="skip-link" href="#main-content">
+        Skip to main content
+      </a>
       <Navbar
         onMenuToggle={() => setSidebarOpen((p) => !p)}
         onAuthClick={() => setShowAuth(true)}
@@ -53,7 +56,7 @@ function AppContent() {
           onNavigate={setCurrentPage}
           userRole={user?.role || "guest"}
         />
-        <main className={`main-content ${sidebarOpen ? "sidebar-open" : ""}`}>
+        <main id="main-content" className={`main-content ${sidebarOpen ? "sidebar-open" : ""}`} tabIndex="-1">
           <Suspense fallback={<LoadingScreen mini />}>
             <PageComponent onNavigate={setCurrentPage} />
           </Suspense>

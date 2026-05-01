@@ -1,5 +1,5 @@
 // src/pages/AssistantPage.jsx
-import { useState, useRef, useEffect, useCallback } from "react";
+import { Fragment, useState, useRef, useEffect, useCallback } from "react";
 import { useLanguage } from "../context/LanguageContext";
 import { useAuth } from "../context/AuthContext";
 import { askGemini } from "../services/gemini";
@@ -22,20 +22,36 @@ const SUGGESTED_QUESTIONS = {
   ],
 };
 
-function formatMessage(text) {
-  // Simple markdown-ish formatting
-  return text
-    .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
-    .replace(/\*(.*?)\*/g, "<em>$1</em>")
-    .replace(/\n\n/g, "</p><p>")
-    .replace(/\n(\d+\.\s)/g, "<br/>$1")
-    .replace(/\n/g, "<br/>");
+function renderInline(text, keyPrefix) {
+  return text.split(/(\*\*[^*]+\*\*|\*[^*]+\*)/g).filter(Boolean).map((part, index) => {
+    const key = `${keyPrefix}-${index}`;
+    if (part.startsWith("**") && part.endsWith("**")) {
+      return <strong key={key}>{part.slice(2, -2)}</strong>;
+    }
+    if (part.startsWith("*") && part.endsWith("*")) {
+      return <em key={key}>{part.slice(1, -1)}</em>;
+    }
+    return <Fragment key={key}>{part}</Fragment>;
+  });
+}
+
+function FormattedMessage({ text }) {
+  return text.split(/\n{2,}/).map((paragraph, paragraphIndex) => (
+    <p key={paragraphIndex} style={{ margin: paragraphIndex === 0 ? 0 : "10px 0 0" }}>
+      {paragraph.split("\n").map((line, lineIndex) => (
+        <Fragment key={`${paragraphIndex}-${lineIndex}`}>
+          {lineIndex > 0 && <br />}
+          {renderInline(line, `${paragraphIndex}-${lineIndex}`)}
+        </Fragment>
+      ))}
+    </p>
+  ));
 }
 
 function Message({ msg }) {
   return (
     <div
-      className="message-bubble"
+      className={`message-bubble ${msg.role}`}
       role={msg.role === "user" ? "none" : "article"}
       aria-label={msg.role === "assistant" ? "Assistant response" : undefined}
       style={{
@@ -65,10 +81,9 @@ function Message({ msg }) {
           <div className="typing-dot" />
         </div>
       ) : (
-        <div
-          style={{ fontSize: 14, lineHeight: 1.7 }}
-          dangerouslySetInnerHTML={{ __html: formatMessage(msg.content) }}
-        />
+        <div style={{ fontSize: 14, lineHeight: 1.7 }}>
+          <FormattedMessage text={msg.content} />
+        </div>
       )}
       {!msg.loading && (
         <div style={{ fontSize: 11, color: msg.role === "user" ? "rgba(255,255,255,0.6)" : "var(--text-muted)", marginTop: 6, textAlign: msg.role === "user" ? "right" : "left" }}>

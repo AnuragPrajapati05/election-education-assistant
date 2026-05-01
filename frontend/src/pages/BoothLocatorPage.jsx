@@ -13,7 +13,7 @@ const MOCK_BOOTHS = [
 
 const MAPS_API_KEY = import.meta.env.VITE_GOOGLE_MAPS_KEY;
 
-function MapPlaceholder({ booths, userLocation }) {
+function MapPlaceholder({ booths }) {
   const canvasRef = useRef(null);
 
   useEffect(() => {

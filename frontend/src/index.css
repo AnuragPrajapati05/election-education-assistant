@@ -64,6 +64,26 @@ body {
   overflow-x: hidden;
 }
 
+.skip-link {
+  position: fixed;
+  top: 8px;
+  left: 8px;
+  z-index: 1000;
+  transform: translateY(-140%);
+  background: var(--accent-primary);
+  color: var(--text-inverse);
+  padding: 10px 14px;
+  border-radius: 10px;
+  text-decoration: none;
+  font-weight: 800;
+}
+.skip-link:focus { transform: translateY(0); outline: 3px solid var(--accent-tertiary); outline-offset: 2px; }
+
+:focus-visible {
+  outline: 3px solid var(--accent-secondary);
+  outline-offset: 3px;
+}
+
 body::before {
   content: '';
   position: fixed;
@@ -424,4 +444,13 @@ body::after {
 @media print {
   .navbar, .sidebar, .chat-input-area { display: none !important; }
   .main-content { margin: 0 !important; padding: 0 !important; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.001ms !important;
+  }
 }

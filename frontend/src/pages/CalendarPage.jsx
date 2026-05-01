@@ -1,6 +1,5 @@
 // src/pages/CalendarPage.jsx
 import { useState } from "react";
-import { useLanguage } from "../context/LanguageContext";
 
 const MONTHS = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
 const DAYS = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
