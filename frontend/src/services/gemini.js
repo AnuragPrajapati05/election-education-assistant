@@ -1,0 +1,128 @@
+// src/services/gemini.js
+// Gemini API integration with response caching
+
+const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
+const GEMINI_MODEL = "gemini-2.0-flash";
+const API_BASE = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent`;
+
+// Simple in-memory cache to reduce API calls
+const responseCache = new Map();
+const CACHE_TTL = 5 * 60 * 1000; // 5 minutes
+
+const SYSTEM_PROMPT = {
+  en: `You are the Election Process Education Assistant for India — a knowledgeable, friendly civic educator.
+Your role is to help citizens understand:
+- Voter registration steps and required documents
+- Eligibility criteria (age, citizenship, residence)
+- Election schedules and important dates
+- Types of elections (Lok Sabha, Vidhan Sabha, local body)
+- The EVM (Electronic Voting Machine) process
+- How to find polling booths
+- NOTA and other voter rights
+- Election Commission of India procedures
+
+Guidelines:
+- Keep responses concise and clear (2-4 short paragraphs max)
+- Use simple, accessible language
+- Provide step-by-step guidance when asked
+- Include relevant Indian election law references when applicable
+- Be politically neutral — never endorse any party or candidate
+- Format key steps as numbered lists when appropriate
+- If asked about something outside elections/civic education, politely redirect`,
+
+  hi: `आप भारत के लिए चुनाव प्रक्रिया शिक्षा सहायक हैं — एक जानकार, मित्रवत नागरिक शिक्षक।
+आपकी भूमिका नागरिकों को समझने में मदद करना है:
+- मतदाता पंजीकरण चरण और आवश्यक दस्तावेज़
+- पात्रता मानदंड (आयु, नागरिकता, निवास)
+- चुनाव कार्यक्रम और महत्वपूर्ण तिथियां
+- चुनाव के प्रकार
+- EVM प्रक्रिया
+- मतदान केंद्र कैसे खोजें
+
+दिशानिर्देश: सरल हिंदी में उत्तर दें, संक्षिप्त रखें, राजनीतिक रूप से तटस्थ रहें।`,
+};
+
+const DEMO_RESPONSES = {
+  en: [
+    "To register as a voter in India, you need to **fill Form 6** on the **National Voters' Service Portal (NVSP)** at voters.eci.gov.in. You'll need proof of age, proof of residence, and a passport-size photo. The process takes about 2-3 weeks after submission.",
+    "The **eligibility criteria** for voting in India are:\n1. Must be a citizen of India\n2. Must be at least **18 years old** as of January 1st of the qualifying year\n3. Must be ordinarily resident of the constituency where you wish to register\n4. Must not be of unsound mind or disqualified under any law",
+    "India uses **Electronic Voting Machines (EVMs)** since 2004. On election day:\n1. Bring your **Voter ID card** (EPIC) to your assigned polling booth\n2. Show it to the polling officer\n3. Get your finger marked with indelible ink\n4. Press the button next to your preferred candidate\n\nYou can also use **VVPAT** (Voter Verifiable Paper Audit Trail) to verify your vote.",
+  ],
+  hi: [
+    "भारत में मतदाता के रूप में पंजीकरण के लिए, **voters.eci.gov.in** पर जाकर **Form 6** भरें। आपको आयु प्रमाण, निवास प्रमाण और पासपोर्ट साइज फोटो की जरूरत होगी। प्रक्रिया लगभग 2-3 सप्ताह में पूरी होती है।",
+  ],
+};
+
+export async function askGemini(userMessage, language = "en", conversationHistory = []) {
+  // Build cache key from last 2 messages + language
+  const cacheKey = `${language}::${userMessage.toLowerCase().trim().slice(0, 80)}`;
+  const cached = responseCache.get(cacheKey);
+  if (cached && Date.now() - cached.timestamp < CACHE_TTL) {
+    return cached.text;
+  }
+
+  // Demo mode: use canned responses
+  if (!GEMINI_API_KEY || GEMINI_API_KEY === "your_gemini_api_key_here") {
+    await sleep(800 + Math.random() * 600);
+    const pool = DEMO_RESPONSES[language] || DEMO_RESPONSES.en;
+    const text = pool[Math.floor(Math.random() * pool.length)];
+    responseCache.set(cacheKey, { text, timestamp: Date.now() });
+    return text;
+  }
+
+  // Build messages array
+  const messages = [
+    // System context as first user turn
+    {
+      role: "user",
+      parts: [{ text: `SYSTEM: ${SYSTEM_PROMPT[language] || SYSTEM_PROMPT.en}` }],
+    },
+    { role: "model", parts: [{ text: "Understood. I'm ready to help citizens with election education." }] },
+    // Conversation history (last 6 turns)
+    ...conversationHistory.slice(-6).map((m) => ({
+      role: m.role === "user" ? "user" : "model",
+      parts: [{ text: m.content }],
+    })),
+    // Current message
+    { role: "user", parts: [{ text: userMessage }] },
+  ];
+
+  const response = await fetch(`${API_BASE}?key=${GEMINI_API_KEY}`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      contents: messages,
+      generationConfig: {
+        temperature: 0.7,
+        topK: 40,
+        topP: 0.95,
+        maxOutputTokens: 1024,
+        stopSequences: [],
+      },
+      safetySettings: [
+        { category: "HARM_CATEGORY_HARASSMENT", threshold: "BLOCK_MEDIUM_AND_ABOVE" },
+        { category: "HARM_CATEGORY_HATE_SPEECH", threshold: "BLOCK_MEDIUM_AND_ABOVE" },
+        { category: "HARM_CATEGORY_SEXUALLY_EXPLICIT", threshold: "BLOCK_MEDIUM_AND_ABOVE" },
+        { category: "HARM_CATEGORY_DANGEROUS_CONTENT", threshold: "BLOCK_MEDIUM_AND_ABOVE" },
+      ],
+    }),
+  });
+
+  if (!response.ok) {
+    const err = await response.json().catch(() => ({}));
+    throw new Error(err?.error?.message || `Gemini API error: ${response.status}`);
+  }
+
+  const data = await response.json();
+  const text = data?.candidates?.[0]?.content?.parts?.[0]?.text || "I'm sorry, I couldn't generate a response. Please try again.";
+
+  // Cache the response
+  responseCache.set(cacheKey, { text, timestamp: Date.now() });
+  return text;
+}
+
+export function clearCache() {
+  responseCache.clear();
+}
+
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
