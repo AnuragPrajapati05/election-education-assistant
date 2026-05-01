@@ -1,4 +1,4 @@
-import { useLanguage } from "../context/LanguageContext";
+﻿import { useLanguage } from "../context/LanguageContext";
 
 const NAV_ITEMS = [
   { id: "dashboard", icon: "Home", key: "dashboard" },

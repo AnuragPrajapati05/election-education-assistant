@@ -1,11 +1,11 @@
-// src/context/LanguageContext.jsx
+﻿// src/context/LanguageContext.jsx
 import { createContext, useContext, useState } from "react";
 
 const LanguageContext = createContext(null);
 
 export const LANGUAGES = {
-  en: { code: "en", name: "English", flag: "🇬🇧" },
-  hi: { code: "hi", name: "हिंदी", flag: "🇮🇳" },
+  en: { code: "en", name: "English", flag: "EN" },
+  hi: { code: "hi", name: "Hindi", flag: "HI" },
 };
 
 export const t = (key, lang, params = {}) => {
@@ -47,34 +47,34 @@ const TRANSLATIONS = {
     days_away: "{days} days away",
   },
   hi: {
-    dashboard: "डैशबोर्ड",
-    assistant: "AI सहायक",
-    registration: "मतदाता पंजीकरण",
-    eligibility: "पात्रता जांच",
-    timeline: "चुनाव समयरेखा",
-    calendar: "चुनाव कैलेंडर",
-    booth: "बूथ लोकेटर",
-    faq: "अक्सर पूछे जाने वाले प्रश्न",
-    admin: "व्यवस्थापक",
-    welcome: "चुनाव शिक्षा केंद्र में आपका स्वागत है",
-    welcome_sub: "लोकतांत्रिक प्रक्रिया को समझने का आपका विश्वसनीय मार्गदर्शक",
-    ask_anything: "चुनाव के बारे में कुछ भी पूछें...",
-    send: "भेजें",
-    language: "भाषा",
-    high_contrast: "उच्च कंट्रास्ट",
-    voice_mode: "वॉयस मोड",
-    login: "लॉगिन",
-    signup: "साइन अप",
-    logout: "लॉगआउट",
-    check_eligibility: "पात्रता जांचें",
-    find_booth: "बूथ खोजें",
-    register_now: "मतदान के लिए पंजीकरण करें",
-    total_users: "पंजीकृत उपयोगकर्ता",
-    chat_sessions: "चैट सत्र",
-    eligible_voters: "पात्र मतदाता",
-    recent_queries: "हाल की पूछताछ",
-    next_election: "अगला चुनाव",
-    days_away: "{days} दिन बाद",
+    dashboard: "Dashboard",
+    assistant: "AI Sahayak",
+    registration: "Voter Registration",
+    eligibility: "Eligibility Check",
+    timeline: "Election Timeline",
+    calendar: "Election Calendar",
+    booth: "Booth Locator",
+    faq: "FAQ",
+    admin: "Admin",
+    welcome: "Election Education Hub mein swagat hai",
+    welcome_sub: "Loktantrik prakriya samajhne ke liye trusted guide",
+    ask_anything: "Election ke baare mein kuch bhi poochhein...",
+    send: "Send",
+    language: "Language",
+    high_contrast: "High Contrast",
+    voice_mode: "Voice Mode",
+    login: "Login",
+    signup: "Sign Up",
+    logout: "Logout",
+    check_eligibility: "Check Eligibility",
+    find_booth: "Find Booth",
+    register_now: "Register to Vote",
+    total_users: "Registered Users",
+    chat_sessions: "Chat Sessions",
+    eligible_voters: "Eligible Voters",
+    recent_queries: "Recent Queries",
+    next_election: "Next Election",
+    days_away: "{days} days away",
   },
 };
 
@@ -88,5 +88,3 @@ export function LanguageProvider({ children }) {
 }
 
 export const useLanguage = () => useContext(LanguageContext);
-
-

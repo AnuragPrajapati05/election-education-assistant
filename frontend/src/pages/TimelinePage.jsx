@@ -1,11 +1,11 @@
-// src/pages/TimelinePage.jsx
+﻿// src/pages/TimelinePage.jsx
 import { useState } from "react";
 import { useLanguage } from "../context/LanguageContext";
 
 const ELECTION_TIMELINE = [
   {
     phase: "Announcement",
-    icon: "📢",
+    icon: "",
     date: "Day 0",
     title: "Model Code of Conduct Comes Into Effect",
     desc: "Election Commission announces election schedule. Model Code of Conduct (MCC) immediately takes effect, restricting ruling parties from making policy announcements.",
@@ -14,8 +14,8 @@ const ELECTION_TIMELINE = [
   },
   {
     phase: "Nominations",
-    icon: "📝",
-    date: "Day 7–14",
+    icon: "",
+    date: "Day 714",
     title: "Nomination Filing Period",
     desc: "Candidates file nomination papers with the Returning Officer. Security deposit required. Nomination must include affidavit disclosing criminal record, assets, and education.",
     status: "complete",
@@ -23,7 +23,7 @@ const ELECTION_TIMELINE = [
   },
   {
     phase: "Scrutiny",
-    icon: "🔍",
+    icon: "",
     date: "Day 15",
     title: "Scrutiny of Nominations",
     desc: "Returning Officer examines nomination papers for validity. Defective papers may be rejected after hearing candidates.",
@@ -32,8 +32,8 @@ const ELECTION_TIMELINE = [
   },
   {
     phase: "Withdrawal",
-    icon: "↩️",
-    date: "Day 16–17",
+    icon: "",
+    date: "Day 1617",
     title: "Withdrawal of Candidature",
     desc: "Candidates may withdraw from the contest within two days after scrutiny. Final list of candidates is published.",
     status: "active",
@@ -41,8 +41,8 @@ const ELECTION_TIMELINE = [
   },
   {
     phase: "Campaigning",
-    icon: "🎙️",
-    date: "Day 18 – Day -2",
+    icon: "",
+    date: "Day 18  Day -2",
     title: "Electoral Campaigning",
     desc: "Parties and candidates campaign through rallies, door-to-door outreach, media. Campaign silence period begins 48 hours before polling.",
     status: "upcoming",
@@ -50,7 +50,7 @@ const ELECTION_TIMELINE = [
   },
   {
     phase: "Polling",
-    icon: "🗳️",
+    icon: "",
     date: "Polling Day",
     title: "Voting Takes Place",
     desc: "Polling stations open 7 AM to 6 PM. Voters verify identity, get finger inked, use EVM to cast vote. VVPAT provides paper trail verification.",
@@ -59,7 +59,7 @@ const ELECTION_TIMELINE = [
   },
   {
     phase: "Counting",
-    icon: "🔢",
+    icon: "",
     date: "Counting Day",
     title: "Vote Counting & Results",
     desc: "EVMs are brought to counting centers. Votes counted under strict supervision. Results declared constituency-wise. Winning candidates receive Certificate of Election.",
@@ -71,40 +71,40 @@ const ELECTION_TIMELINE = [
 const REGISTRATION_STEPS = [
   {
     step: 1, title: "Check Roll / Form 6",
-    icon: "🔎", color: "#2563eb",
+    icon: "", color: "#2563eb",
     desc: "Visit voters.eci.gov.in or your state CEOs website. Check if your name already exists on the Electoral Roll.",
     action: "Go to voters.eci.gov.in",
     link: "https://voters.eci.gov.in",
   },
   {
     step: 2, title: "Fill Form 6",
-    icon: "📝", color: "#6366f1",
+    icon: "", color: "#6366f1",
     desc: "Fill the online Form 6 for new voter registration. Provide personal details, address, and upload documents.",
     action: "Fill Form 6 Online",
     link: "https://voters.eci.gov.in/home",
   },
   {
     step: 3, title: "Upload Documents",
-    icon: "📎", color: "#0ea5e9",
+    icon: "", color: "#0ea5e9",
     desc: "Upload scanned copies of proof of age, proof of address, and a recent passport-size photograph.",
     action: null,
   },
   {
     step: 4, title: "Submit Application",
-    icon: "✅", color: "#10b981",
+    icon: "", color: "#10b981",
     desc: "Submit the form online or at your local Electoral Registration Office (ERO). Note down your reference number.",
     action: null,
   },
   {
     step: 5, title: "Verification",
-    icon: "🏠", color: "#f59e0b",
+    icon: "", color: "#f59e0b",
     desc: "A Booth Level Officer (BLO) may visit your address for verification, or you may be called for in-person verification.",
     action: null,
   },
   {
     step: 6, title: "Receive EPIC",
-    icon: "🪪", color: "#ef4444",
-    desc: "After approval (usually 2–3 weeks), your Voter ID (EPIC - Elector's Photo Identity Card) is issued. Download eEPIC from the portal.",
+    icon: "", color: "#ef4444",
+    desc: "After approval (usually 23 weeks), your Voter ID (EPIC - Elector's Photo Identity Card) is issued. Download eEPIC from the portal.",
     action: "Check Application Status",
     link: "https://voters.eci.gov.in/home",
   },
@@ -118,8 +118,8 @@ export default function TimelinePage() {
   return (
     <div style={{ maxWidth: 1100, margin: "0 auto" }}>
       <div className="page-header">
-        <h1 className="page-title">📅 {t("timeline")}</h1>
-        <p className="page-subtitle">How Indian elections work — from announcement to results</p>
+        <h1 className="page-title"> {t("timeline")}</h1>
+        <p className="page-subtitle">How Indian elections work  from announcement to results</p>
       </div>
 
       <div className="grid-2" style={{ gap: 28, alignItems: "start" }}>
@@ -225,7 +225,7 @@ export default function TimelinePage() {
                     transition: "var(--transition)",
                   }}
                 >
-                  {i < registrationStep ? "✓" : step.icon}
+                  {i < registrationStep ? "" : step.icon}
                 </div>
                 <div style={{ flex: 1 }}>
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
@@ -252,7 +252,7 @@ export default function TimelinePage() {
                       className="btn btn-secondary btn-sm"
                       style={{ marginTop: 10, fontSize: 12 }}
                     >
-                      {step.action} ↗
+                      {step.action}
                     </a>
                   )}
                 </div>
@@ -266,7 +266,7 @@ export default function TimelinePage() {
               onClick={() => setRegistrationStep((p) => Math.max(0, p - 1))}
               disabled={registrationStep === 0}
             >
-              ← Back
+               Back
             </button>
             <button
               className="btn btn-primary btn-sm"
@@ -274,7 +274,7 @@ export default function TimelinePage() {
               onClick={() => setRegistrationStep((p) => Math.min(REGISTRATION_STEPS.length - 1, p + 1))}
               disabled={registrationStep === REGISTRATION_STEPS.length - 1}
             >
-              {registrationStep === REGISTRATION_STEPS.length - 1 ? "✓ All Steps Complete" : "Next Step →"}
+              {registrationStep === REGISTRATION_STEPS.length - 1 ? " All Steps Complete" : "Next Step "}
             </button>
           </div>
         </div>

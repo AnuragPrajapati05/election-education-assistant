@@ -1,4 +1,4 @@
-// src/pages/AssistantPage.jsx
+﻿// src/pages/AssistantPage.jsx
 import { Fragment, useState, useRef, useEffect, useCallback } from "react";
 import { useLanguage } from "../context/LanguageContext";
 import { useAuth } from "../context/AuthContext";
@@ -15,10 +15,10 @@ const SUGGESTED_QUESTIONS = {
     "How to find my polling booth?",
   ],
   hi: [
-    "पहली बार मतदाता के रूप में पंजीकरण कैसे करें?",
-    "भारत में मतदान की न्यूनतम आयु क्या है?",
-    "EVM कैसे काम करती है?",
-    "NOTA क्या है?",
+    "Pehli baar voter registration kaise karun?",
+    "India mein voting ki minimum age kya hai?",
+    "EVM kaise kaam karti hai?",
+    "NOTA kya hai?",
   ],
 };
 
@@ -68,7 +68,7 @@ function Message({ msg }) {
               display: "flex", alignItems: "center", justifyContent: "center",
               fontSize: 12,
             }}
-          >🤖</div>
+          >AI</div>
           <span style={{ fontSize: 11, fontWeight: 700, color: "var(--accent-primary)", textTransform: "uppercase", letterSpacing: "0.06em" }}>
             AI Assistant
           </span>
@@ -104,8 +104,8 @@ export default function AssistantPage() {
       id: 0, role: "assistant", loading: false,
       timestamp: Date.now(),
       content: language === "hi"
-        ? "नमस्ते! मैं आपका चुनाव शिक्षा सहायक हूं। मतदाता पंजीकरण, पात्रता, चुनाव प्रक्रिया — कुछ भी पूछें!"
-        : "Hello! I'm your Election Education Assistant 🗳️\n\nI can help you with:\n- **Voter registration** steps and requirements\n- **Eligibility** criteria and verification\n- **Election process** and important dates\n- **Polling booth** information\n- **Documents** needed for voting\n\nWhat would you like to know?",
+        ? "Namaste! Main aapka Election Education Assistant hoon.\n\nMain voter registration, eligibility, polling booth, documents, aur election process ke baare mein madad kar sakta hoon."
+        : "Hello! I'm your Election Education Assistant.\n\nI can help you with:\n- **Voter registration** steps and requirements\n- **Eligibility** criteria and verification\n- **Election process** and important dates\n- **Polling booth** information\n- **Documents** needed for voting\n\nWhat would you like to know?",
     },
   ]);
   const [input, setInput] = useState("");
@@ -170,8 +170,8 @@ export default function AssistantPage() {
   return (
     <div style={{ maxWidth: 900, margin: "0 auto", height: "calc(100vh - 120px)", display: "flex", flexDirection: "column", gap: 16 }}>
       <div className="page-header" style={{ marginBottom: 0, flexShrink: 0 }}>
-        <h1 className="page-title">🤖 {t("assistant")}</h1>
-        <p className="page-subtitle">Powered by Google Gemini AI — Ask anything about Indian elections</p>
+        <h1 className="page-title">{t("assistant")}</h1>
+        <p className="page-subtitle">Powered by Google Gemini AI. Ask anything about Indian elections.</p>
       </div>
 
       {/* Suggested questions */}
@@ -223,7 +223,7 @@ export default function AssistantPage() {
                 <span className="typing-dot" style={{ width: 5, height: 5 }} />
                 <span className="typing-dot" style={{ width: 5, height: 5, animationDelay: "0.2s" }} />
               </span>
-            ) : "→"}
+            ) : "Send"}
           </button>
         </div>
       </div>

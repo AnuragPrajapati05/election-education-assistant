@@ -1,4 +1,4 @@
-// src/components/LoadingScreen.jsx
+﻿// src/components/LoadingScreen.jsx
 export default function LoadingScreen({ mini = false }) {
   if (mini) {
     return (
@@ -38,7 +38,7 @@ export default function LoadingScreen({ mini = false }) {
           animation: "float 2s ease-in-out infinite",
         }}
       >
-        🗳️
+
       </div>
       <div style={{ textAlign: "center" }}>
         <div style={{ fontFamily: "var(--font-display)", fontSize: 22, fontWeight: 800, marginBottom: 6 }}>

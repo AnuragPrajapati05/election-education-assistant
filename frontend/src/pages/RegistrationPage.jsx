@@ -1,4 +1,4 @@
-// src/pages/RegistrationPage.jsx
+﻿// src/pages/RegistrationPage.jsx
 import { useState } from "react";
 import { useLanguage } from "../context/LanguageContext";
 
@@ -6,7 +6,7 @@ const FORM_STEPS = [
   {
     id: "personal",
     title: "Personal Details",
-    icon: "👤",
+    icon: "",
     fields: [
       { id: "firstName", label: "First Name", type: "text", required: true, placeholder: "Enter first name" },
       { id: "lastName", label: "Last Name", type: "text", required: true, placeholder: "Enter last name" },
@@ -18,7 +18,7 @@ const FORM_STEPS = [
   {
     id: "address",
     title: "Current Address",
-    icon: "🏠",
+    icon: "",
     fields: [
       { id: "houseNo", label: "House/Flat Number", type: "text", required: true, placeholder: "Enter house/flat no." },
       { id: "street", label: "Street / Area", type: "text", required: true, placeholder: "Enter street name" },
@@ -31,7 +31,7 @@ const FORM_STEPS = [
   {
     id: "documents",
     title: "Upload Documents",
-    icon: "📎",
+    icon: "",
     fields: [
       { id: "ageProof", label: "Proof of Age", type: "file", required: true, accept: ".pdf,.jpg,.png", hint: "Birth certificate, 10th Marksheet, or Passport" },
       { id: "addressProof", label: "Proof of Address", type: "file", required: true, accept: ".pdf,.jpg,.png", hint: "Aadhaar, Utility bill, or Bank passbook" },
@@ -41,7 +41,7 @@ const FORM_STEPS = [
   {
     id: "review",
     title: "Review & Submit",
-    icon: "✅",
+    icon: "",
     fields: [],
   },
 ];
@@ -55,7 +55,7 @@ function StepIndicator({ steps, current }) {
             <div
               className={`step-circle ${i < current ? "complete" : i === current ? "active" : ""}`}
             >
-              {i < current ? "✓" : step.icon}
+              {i < current ? "" : step.icon}
             </div>
             <div className="step-label" style={{ color: i === current ? "var(--accent-primary)" : "var(--text-muted)" }}>
               {step.title}
@@ -114,10 +114,10 @@ function FormField({ field, value, onChange }) {
             onChange={(e) => onChange(field.id, e.target.files[0]?.name || "")}
           />
           {value ? (
-            <div style={{ color: "#059669", fontSize: 13 }}>✅ {value}</div>
+            <div style={{ color: "#059669", fontSize: 13 }}> {value}</div>
           ) : (
             <>
-              <div style={{ fontSize: 28, marginBottom: 6 }}>📎</div>
+              <div style={{ fontSize: 28, marginBottom: 6 }}></div>
               <div style={{ fontSize: 13, fontWeight: 600 }}>Click to upload or drag & drop</div>
               <div style={{ fontSize: 11, color: "var(--text-muted)", marginTop: 4 }}>{field.hint}</div>
             </>
@@ -169,7 +169,7 @@ export default function RegistrationPage() {
     return (
       <div style={{ maxWidth: 600, margin: "0 auto" }}>
         <div className="glass-card animate-in" style={{ padding: 48, textAlign: "center" }}>
-          <div style={{ fontSize: 64, marginBottom: 16 }}>🎉</div>
+          <div style={{ fontSize: 64, marginBottom: 16 }}></div>
           <h1 style={{ fontFamily: "var(--font-display)", fontSize: 24, fontWeight: 800, marginBottom: 8 }}>
             Application Submitted!
           </h1>
@@ -183,9 +183,9 @@ export default function RegistrationPage() {
             </div>
           </div>
           <div style={{ fontSize: 13, color: "var(--text-secondary)", lineHeight: 1.8, marginBottom: 24 }}>
-            📬 A confirmation SMS has been sent to your mobile.<br />
-            👤 A Booth Level Officer will verify your address within 2-4 weeks.<br />
-            🪪 Your Voter ID (EPIC) will be dispatched after approval.
+             A confirmation SMS has been sent to your mobile.<br />
+             A Booth Level Officer will verify your address within 2-4 weeks.<br />
+             Your Voter ID (EPIC) will be dispatched after approval.
           </div>
           <a
             href="https://voters.eci.gov.in/home"
@@ -193,7 +193,7 @@ export default function RegistrationPage() {
             rel="noopener noreferrer"
             className="btn btn-primary"
           >
-            Track Your Application ↗
+            Track Your Application
           </a>
         </div>
       </div>
@@ -205,8 +205,8 @@ export default function RegistrationPage() {
   return (
     <div style={{ maxWidth: 720, margin: "0 auto" }}>
       <div className="page-header">
-        <h1 className="page-title">📝 {t("registration")}</h1>
-        <p className="page-subtitle">Complete Form 6 — New Voter Registration</p>
+        <h1 className="page-title"> {t("registration")}</h1>
+        <p className="page-subtitle">Complete Form 6  New Voter Registration</p>
       </div>
 
       <StepIndicator steps={FORM_STEPS} current={currentStep} />
@@ -257,11 +257,11 @@ export default function RegistrationPage() {
         <div style={{ display: "flex", justifyContent: "space-between", marginTop: 28 }}>
           {currentStep > 0 ? (
             <button className="btn btn-ghost" onClick={() => setCurrentStep((p) => p - 1)}>
-              ← Back
+               Back
             </button>
           ) : <div />}
           <button className="btn btn-primary btn-lg" onClick={handleNext}>
-            {currentStep === FORM_STEPS.length - 1 ? "Submit Application →" : "Continue →"}
+            {currentStep === FORM_STEPS.length - 1 ? "Submit Application " : "Continue "}
           </button>
         </div>
       </div>

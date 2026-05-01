@@ -1,4 +1,4 @@
-// src/pages/FAQPage.jsx
+﻿// src/pages/FAQPage.jsx
 import { useState, useMemo } from "react";
 import { useLanguage } from "../context/LanguageContext";
 import { trackEvent } from "../services/firebase";
@@ -47,7 +47,7 @@ const FAQS = [
   {
     category: "Documents",
     q: "How do I get a duplicate Voter ID (EPIC) if it's lost?",
-    a: "Log in to voters.eci.gov.in and apply for a duplicate EPIC card. You'll need to submit an FIR copy for lost cards. You can also download the eEPIC (digital Voter ID) directly from the portal by verifying your mobile OTP — this is free and accepted as a valid document."
+    a: "Log in to voters.eci.gov.in and apply for a duplicate EPIC card. You'll need to submit an FIR copy for lost cards. You can also download the eEPIC (digital Voter ID) directly from the portal by verifying your mobile OTP  this is free and accepted as a valid document."
   },
   {
     category: "Election Types",
@@ -57,7 +57,7 @@ const FAQS = [
   {
     category: "Election Types",
     q: "What is the difference between Lok Sabha and Vidhan Sabha?",
-    a: "Lok Sabha is India's lower house of Parliament — 543 elected seats representing the entire country. Vidhan Sabha is the State Legislative Assembly — number of seats varies by state (e.g., UP has 403, Delhi has 70). Lok Sabha members are called MPs (Members of Parliament), while Vidhan Sabha members are MLAs (Members of Legislative Assembly)."
+    a: "Lok Sabha is India's lower house of Parliament  543 elected seats representing the entire country. Vidhan Sabha is the State Legislative Assembly  number of seats varies by state (e.g., UP has 403, Delhi has 70). Lok Sabha members are called MPs (Members of Parliament), while Vidhan Sabha members are MLAs (Members of Legislative Assembly)."
   },
   {
     category: "Problems / Corrections",
@@ -88,7 +88,7 @@ export default function FAQPage() {
   return (
     <div style={{ maxWidth: 860, margin: "0 auto" }}>
       <div className="page-header">
-        <h1 className="page-title">❓ {t("faq")}</h1>
+        <h1 className="page-title"> {t("faq")}</h1>
         <p className="page-subtitle">Frequently asked questions about Indian elections and voting</p>
       </div>
 
@@ -97,7 +97,7 @@ export default function FAQPage() {
         <span style={{
           position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)",
           fontSize: 16, color: "var(--text-muted)", pointerEvents: "none",
-        }}>🔍</span>
+        }}></span>
         <input
           type="search"
           className="form-input"
@@ -127,7 +127,7 @@ export default function FAQPage() {
       <div role="list" aria-label="Frequently asked questions">
         {filtered.length === 0 ? (
           <div className="glass-card" style={{ padding: 40, textAlign: "center" }}>
-            <div style={{ fontSize: 40, marginBottom: 12 }}>🔍</div>
+            <div style={{ fontSize: 40, marginBottom: 12 }}></div>
             <p style={{ color: "var(--text-secondary)" }}>No questions found for "{search}"</p>
           </div>
         ) : (
@@ -143,7 +143,7 @@ export default function FAQPage() {
                   <span className="badge badge-blue" style={{ fontSize: 10, marginRight: 8 }}>{faq.category}</span>
                   {faq.q}
                 </div>
-                <span className="faq-chevron" aria-hidden="true">▾</span>
+                <span className="faq-chevron" aria-hidden="true"></span>
               </button>
               <div
                 className={`faq-answer ${openIndex === i ? "open" : ""}`}
@@ -166,16 +166,16 @@ export default function FAQPage() {
           background: "linear-gradient(135deg, rgba(37,99,235,0.06), rgba(99,102,241,0.06))",
         }}
       >
-        <div style={{ fontSize: 32, marginBottom: 10 }}>🤖</div>
+        <div style={{ fontSize: 32, marginBottom: 10 }}></div>
         <h3 style={{ fontFamily: "var(--font-display)", fontSize: 16, fontWeight: 700, marginBottom: 8 }}>
           Didn't find your answer?
         </h3>
         <p style={{ fontSize: 13, color: "var(--text-secondary)", marginBottom: 14 }}>
-          Ask our AI Assistant — it can answer more specific questions about elections.
+          Ask our AI Assistant  it can answer more specific questions about elections.
         </p>
         <div style={{ display: "flex", gap: 10, justifyContent: "center", flexWrap: "wrap" }}>
-          <button className="btn btn-primary btn-sm">Ask AI Assistant →</button>
-          <a href="tel:1950" className="btn btn-ghost btn-sm">📞 Call 1950 (Helpline)</a>
+          <button className="btn btn-primary btn-sm">Ask AI Assistant </button>
+          <a href="tel:1950" className="btn btn-ghost btn-sm"> Call 1950 (Helpline)</a>
         </div>
       </div>
     </div>

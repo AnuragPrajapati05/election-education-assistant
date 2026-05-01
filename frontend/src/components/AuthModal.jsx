@@ -1,4 +1,4 @@
-// src/components/AuthModal.jsx
+﻿// src/components/AuthModal.jsx
 import { useState } from "react";
 import { signIn, signUp, signInWithGoogle } from "../services/firebase";
 
@@ -65,7 +65,7 @@ export default function AuthModal({ onClose }) {
         {/* Header */}
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 28 }}>
           <div>
-            <div style={{ fontSize: 36, marginBottom: 8 }}>🗳️</div>
+            <div style={{ fontSize: 36, marginBottom: 8 }}></div>
             <h2 style={{ fontFamily: "var(--font-display)", fontSize: 22, fontWeight: 800 }}>
               {mode === "login" ? "Welcome back" : "Create account"}
             </h2>
@@ -78,7 +78,7 @@ export default function AuthModal({ onClose }) {
             onClick={onClose}
             aria-label="Close dialog"
             style={{ fontSize: 18 }}
-          >✕</button>
+          ></button>
         </div>
 
         {/* Google button */}
@@ -156,7 +156,7 @@ export default function AuthModal({ onClose }) {
                 color: "#dc2626", fontSize: 13, marginBottom: 16,
               }}
             >
-              ⚠️ {error}
+               {error}
             </div>
           )}
 
@@ -166,7 +166,7 @@ export default function AuthModal({ onClose }) {
             style={{ width: "100%" }}
             disabled={loading}
           >
-            {loading ? "Please wait..." : mode === "login" ? "Sign In →" : "Create Account →"}
+            {loading ? "Please wait..." : mode === "login" ? "Sign In " : "Create Account "}
           </button>
         </form>
 

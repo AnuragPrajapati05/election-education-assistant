@@ -1,4 +1,4 @@
-// src/services/gemini.js
+﻿// src/services/gemini.js
 // Gemini API integration with response caching
 
 const GEMINI_MODEL = "gemini-2.0-flash";
@@ -9,7 +9,7 @@ const responseCache = new Map();
 const CACHE_TTL = 5 * 60 * 1000; // 5 minutes
 
 const SYSTEM_PROMPT = {
-  en: `You are the Election Process Education Assistant for India — a knowledgeable, friendly civic educator.
+  en: `You are the Election Process Education Assistant for India, a knowledgeable and friendly civic educator.
 Your role is to help citizens understand:
 - Voter registration steps and required documents
 - Eligibility criteria (age, citizenship, residence)
@@ -25,20 +25,14 @@ Guidelines:
 - Use simple, accessible language
 - Provide step-by-step guidance when asked
 - Include relevant Indian election law references when applicable
-- Be politically neutral — never endorse any party or candidate
+- Be politically neutral and never endorse any party or candidate
 - Format key steps as numbered lists when appropriate
 - If asked about something outside elections/civic education, politely redirect`,
 
-  hi: `आप भारत के लिए चुनाव प्रक्रिया शिक्षा सहायक हैं — एक जानकार, मित्रवत नागरिक शिक्षक।
-आपकी भूमिका नागरिकों को समझने में मदद करना है:
-- मतदाता पंजीकरण चरण और आवश्यक दस्तावेज़
-- पात्रता मानदंड (आयु, नागरिकता, निवास)
-- चुनाव कार्यक्रम और महत्वपूर्ण तिथियां
-- चुनाव के प्रकार
-- EVM प्रक्रिया
-- मतदान केंद्र कैसे खोजें
-
-दिशानिर्देश: सरल हिंदी में उत्तर दें, संक्षिप्त रखें, राजनीतिक रूप से तटस्थ रहें।`,
+  hi: `You are an Indian election education assistant.
+Respond in simple Hinglish/Hindi transliteration.
+Help users with voter registration, eligibility, required documents, EVM, NOTA, polling booths, and official ECI processes.
+Stay politically neutral and redirect non-election questions politely.`,
 };
 
 const DEMO_RESPONSES = {
@@ -48,7 +42,7 @@ const DEMO_RESPONSES = {
     "India uses **Electronic Voting Machines (EVMs)** since 2004. On election day:\n1. Bring your **Voter ID card** (EPIC) to your assigned polling booth\n2. Show it to the polling officer\n3. Get your finger marked with indelible ink\n4. Press the button next to your preferred candidate\n\nYou can also use **VVPAT** (Voter Verifiable Paper Audit Trail) to verify your vote.",
   ],
   hi: [
-    "भारत में मतदाता के रूप में पंजीकरण के लिए, **voters.eci.gov.in** पर जाकर **Form 6** भरें। आपको आयु प्रमाण, निवास प्रमाण और पासपोर्ट साइज फोटो की जरूरत होगी। प्रक्रिया लगभग 2-3 सप्ताह में पूरी होती है।",
+    "Voter registration ke liye **voters.eci.gov.in** par **Form 6** fill karein. Aapko age proof, residence proof, aur passport-size photo chahiye. Submission ke baad verification usually 2-3 weeks leta hai.",
   ],
 };
 
@@ -57,6 +51,13 @@ export function getGeminiApiKey() {
     return globalThis.__TEST_GEMINI_API_KEY__;
   }
   return import.meta.env.VITE_GEMINI_API_KEY;
+}
+
+export function getApiBaseUrl() {
+  if (typeof globalThis !== "undefined" && "__TEST_API_BASE_URL__" in globalThis) {
+    return globalThis.__TEST_API_BASE_URL__;
+  }
+  return import.meta.env.VITE_API_BASE_URL || "";
 }
 
 export function normalizeLanguage(language = "en") {
@@ -75,6 +76,29 @@ export function isDemoMode(apiKey = getGeminiApiKey()) {
   return !apiKey || apiKey === "your_gemini_api_key_here";
 }
 
+async function askBackendChat(prompt, language, conversationHistory) {
+  const apiBaseUrl = getApiBaseUrl().replace(/\/$/, "");
+  if (!apiBaseUrl) return null;
+
+  const response = await fetch(`${apiBaseUrl}/api/chat/`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      message: prompt,
+      language,
+      history: conversationHistory.slice(-6).filter((m) => normalizePrompt(m?.content)),
+    }),
+  });
+
+  if (!response.ok) {
+    const err = await response.json().catch(() => ({}));
+    throw new Error(err?.detail || `Backend chat error: ${response.status}`);
+  }
+
+  const data = await response.json();
+  return data.response;
+}
+
 export async function askGemini(userMessage, language = "en", conversationHistory = []) {
   const apiKey = getGeminiApiKey();
   const activeLanguage = normalizeLanguage(language);
@@ -87,6 +111,12 @@ export async function askGemini(userMessage, language = "en", conversationHistor
   const cached = responseCache.get(cacheKey);
   if (cached && Date.now() - cached.timestamp < CACHE_TTL) {
     return cached.text;
+  }
+
+  const backendResponse = await askBackendChat(prompt, activeLanguage, conversationHistory);
+  if (backendResponse) {
+    responseCache.set(cacheKey, { text: backendResponse, timestamp: Date.now() });
+    return backendResponse;
   }
 
   if (isDemoMode(apiKey)) {

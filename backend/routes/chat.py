@@ -1,4 +1,4 @@
-"""
+﻿"""
 AI chat routes with Gemini proxying, lightweight caching, and starter prompts.
 """
 

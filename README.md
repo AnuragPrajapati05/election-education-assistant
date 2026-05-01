@@ -162,11 +162,13 @@ election-assistant/
 - example environment files are provided without real secrets,
 - Firebase service-account keys are excluded from git,
 - backend secrets are intended to stay server-side,
+- production chat requests can use the FastAPI `/api/chat/` proxy so Gemini keys do not need to be exposed in the browser,
 - rate limiting is implemented in the FastAPI middleware,
 - input validation is handled with Pydantic models,
 - backend responses include defensive security headers,
 - the production static server rejects malformed paths and path traversal attempts,
 - assistant responses are rendered as safe React text instead of injected HTML,
+- Firestore rules enforce ownership, immutable audit records, and admin-only analytics access,
 - Firebase admin verification hooks are included for protected flows,
 - production deployment is separated from local developer configuration.
 
@@ -319,6 +321,8 @@ This repository includes deployment-ready support for:
 - secure handling of secrets in repository structure,
 - accessible and polished user interface,
 - maintainable code organization across frontend, backend, and cloud config.
+
+For a category-by-category evaluation map, see `docs/EVALUATION.md`.
 
 ## License
 

@@ -1,4 +1,4 @@
-// src/pages/EligibilityPage.jsx
+﻿// src/pages/EligibilityPage.jsx
 import { useState } from "react";
 import { useLanguage } from "../context/LanguageContext";
 import { useAuth } from "../context/AuthContext";
@@ -28,16 +28,16 @@ function checkEligibility(form) {
     const m = qualifying.getMonth() - dob.getMonth();
     if (m < 0 || (m === 0 && qualifying.getDate() < dob.getDate())) age--;
     if (age >= 18) {
-      results.push({ pass: true, text: `Age ${age} years — meets the minimum age requirement of 18 years.` });
+      results.push({ pass: true, text: `Age ${age} years  meets the minimum age requirement of 18 years.` });
     } else {
-      results.push({ pass: false, text: `Age ${age} years — must be at least 18 years as of January 1st of the qualifying year.` });
+      results.push({ pass: false, text: `Age ${age} years  must be at least 18 years as of January 1st of the qualifying year.` });
       eligible = false;
     }
   }
 
   // Citizenship
   if (form.citizen === "yes") {
-    results.push({ pass: true, text: "Indian citizenship — meets citizenship requirement." });
+    results.push({ pass: true, text: "Indian citizenship  meets citizenship requirement." });
   } else if (form.citizen === "no") {
     results.push({ pass: false, text: "Must be a citizen of India to vote in Indian elections." });
     eligible = false;
@@ -45,14 +45,14 @@ function checkEligibility(form) {
 
   // Residence
   if (form.state) {
-    results.push({ pass: true, text: `Residing in ${form.state} — you can register in your constituency.` });
+    results.push({ pass: true, text: `Residing in ${form.state}  you can register in your constituency.` });
   }
 
   // Existing registration
   if (form.hasVoterId === "yes") {
-    results.push({ pass: true, text: "Already registered — you can vote using your existing Voter ID (EPIC)." });
+    results.push({ pass: true, text: "Already registered  you can vote using your existing Voter ID (EPIC)." });
   } else if (form.hasVoterId === "no") {
-    results.push({ pass: null, text: "Not registered yet — you will need to apply for voter registration." });
+    results.push({ pass: null, text: "Not registered yet  you will need to apply for voter registration." });
   }
 
   // Mental health / disqualification
@@ -69,7 +69,7 @@ const DOC_CHECKLIST = [
   { id: 2, name: "Proof of Age (Birth certificate / 10th marksheet / Passport)", required: true },
   { id: 3, name: "Proof of Residence (Aadhaar card / Utility bill / Bank passbook)", required: true },
   { id: 4, name: "1 Passport-size photograph (colour)", required: true },
-  { id: 5, name: "Aadhaar card (for linking — recommended)", required: false },
+  { id: 5, name: "Aadhaar card (for linking  recommended)", required: false },
   { id: 6, name: "Proof of citizenship (if not evident from above)", required: false },
 ];
 
@@ -94,7 +94,7 @@ export default function EligibilityPage() {
   return (
     <div style={{ maxWidth: 800, margin: "0 auto" }}>
       <div className="page-header">
-        <h1 className="page-title">✅ {t("eligibility")}</h1>
+        <h1 className="page-title"> {t("eligibility")}</h1>
         <p className="page-subtitle">Check if you are eligible to vote in Indian elections</p>
       </div>
 
@@ -126,7 +126,7 @@ export default function EligibilityPage() {
                   onClick={() => setForm({ ...form, citizen: v })}
                   aria-pressed={form.citizen === v}
                 >
-                  {v === "yes" ? "✓ Yes" : "✗ No"}
+                  {v === "yes" ? " Yes" : " No"}
                 </button>
               ))}
             </div>
@@ -185,7 +185,7 @@ export default function EligibilityPage() {
             disabled={!allFilled}
             aria-label="Check eligibility"
           >
-            Check My Eligibility →
+            Check My Eligibility
           </button>
         </div>
 
@@ -194,7 +194,7 @@ export default function EligibilityPage() {
           {result && (
             <div className={`eligibility-result animate-in ${result.eligible ? "eligible" : "ineligible"}`}>
               <div className="eligibility-icon" aria-hidden="true">
-                {result.eligible ? "✅" : "❌"}
+                {result.eligible ? "" : ""}
               </div>
               <h3 style={{ fontFamily: "var(--font-display)", fontSize: 20, fontWeight: 800, color: result.eligible ? "#059669" : "#dc2626", marginBottom: 8 }}>
                 {result.eligible ? "You are eligible to vote!" : "Not currently eligible"}
@@ -203,7 +203,7 @@ export default function EligibilityPage() {
                 {result.results.map((r, i) => (
                   <div key={i} style={{ display: "flex", gap: 10, alignItems: "flex-start" }}>
                     <span style={{ flexShrink: 0, fontSize: 16 }}>
-                      {r.pass === true ? "✅" : r.pass === false ? "❌" : "ℹ️"}
+                      {r.pass === true ? "" : r.pass === false ? "" : ""}
                     </span>
                     <span style={{ fontSize: 13, color: "var(--text-secondary)" }}>{r.text}</span>
                   </div>
@@ -215,7 +215,7 @@ export default function EligibilityPage() {
           {/* Document checklist */}
           <div className="glass-card" style={{ padding: 24, marginTop: result ? 20 : 0 }}>
             <h3 style={{ fontFamily: "var(--font-display)", fontSize: 16, fontWeight: 700, marginBottom: 16 }}>
-              📋 Document Checklist
+               Document Checklist
             </h3>
             <p style={{ fontSize: 13, color: "var(--text-secondary)", marginBottom: 16 }}>
               Documents required for voter registration (Form 6):
@@ -249,8 +249,8 @@ export default function EligibilityPage() {
             ))}
             {checkedDocs.length > 0 && (
               <div style={{ marginTop: 12, padding: "10px 14px", borderRadius: "var(--radius-sm)", background: "rgba(16,185,129,0.08)", fontSize: 13, color: "#059669" }}>
-                ✓ {checkedDocs.length} of {DOC_CHECKLIST.length} documents ready
-                {checkedDocs.length >= DOC_CHECKLIST.filter(d => d.required).length && " — Required documents complete!"}
+                 {checkedDocs.length} of {DOC_CHECKLIST.length} documents ready
+                {checkedDocs.length >= DOC_CHECKLIST.filter(d => d.required).length && "  Required documents complete!"}
               </div>
             )}
           </div>

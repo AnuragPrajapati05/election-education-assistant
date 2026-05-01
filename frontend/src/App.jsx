@@ -1,4 +1,4 @@
-import { useState, lazy, Suspense } from "react";
+﻿import { useState, lazy, Suspense } from "react";
 import { AuthProvider, useAuth } from "./context/AuthContext";
 import { LanguageProvider } from "./context/LanguageContext";
 import { AccessibilityProvider } from "./context/AccessibilityContext";

@@ -1,4 +1,4 @@
-// src/context/AuthContext.jsx
+﻿// src/context/AuthContext.jsx
 import { createContext, useContext, useState, useEffect } from "react";
 import { onAuthChange, getUserProfile, trackEvent } from "../services/firebase";
 

@@ -1,4 +1,4 @@
-// src/services/firebase.js
+﻿// src/services/firebase.js
 import { initializeApp } from "firebase/app";
 import {
   getAuth,
@@ -51,7 +51,7 @@ try {
   console.warn("Firebase not configured - running in demo mode");
 }
 
-// ─── Auth Helpers ────────────────────────────────────────────────────────────
+//  Auth Helpers
 
 export const signIn = async (email, password) => {
   if (!auth) return mockUser(email);
@@ -100,7 +100,7 @@ export const onAuthChange = (callback) => {
   return onAuthStateChanged(auth, callback);
 };
 
-// ─── Firestore Helpers ───────────────────────────────────────────────────────
+//  Firestore Helpers
 
 export const getUserProfile = async (uid) => {
   if (!db) return { role: "user", preferences: {} };
@@ -144,13 +144,13 @@ export const getAnalyticsStats = async () => {
   return snap.docs.map((d) => d.data());
 };
 
-// ─── Analytics ───────────────────────────────────────────────────────────────
+//  Analytics
 
 export const trackEvent = (name, params = {}) => {
   if (analytics) logEvent(analytics, name, params);
 };
 
-// ─── Mock helpers for demo mode ──────────────────────────────────────────────
+//  Mock helpers for demo mode
 
 const mockUser = (email, displayName = "Demo User") => ({
   uid: "demo-uid-123",

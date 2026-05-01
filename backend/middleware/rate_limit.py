@@ -1,4 +1,4 @@
-# backend/middleware/rate_limit.py
+﻿# backend/middleware/rate_limit.py
 """
 Simple in-memory rate limiter using sliding window algorithm.
 For production, use Redis-backed rate limiting.

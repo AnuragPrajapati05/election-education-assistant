@@ -1,4 +1,4 @@
-"""FastAPI application for the Election Education Assistant."""
+﻿"""FastAPI application for the Election Education Assistant."""
 
 import logging
 import os

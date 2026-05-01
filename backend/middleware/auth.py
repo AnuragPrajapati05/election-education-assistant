@@ -1,4 +1,4 @@
-# backend/middleware/auth.py
+﻿# backend/middleware/auth.py
 """
 Firebase token verification middleware.
 """

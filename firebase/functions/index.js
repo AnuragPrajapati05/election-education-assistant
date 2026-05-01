@@ -1,9 +1,9 @@
-// firebase/functions/index.js
+﻿// firebase/functions/index.js
 /**
  * Firebase Cloud Functions
- * - trackAnalytics: Triggered on new chat sessions → updates analytics counters
- * - onNewUser: Triggered on new user creation → sends welcome notification
- * - scheduledRollRevision: Daily cron → checks for upcoming electoral roll revision campaigns
+ * - trackAnalytics: Triggered on new chat sessions and updates analytics counters
+ * - onNewUser: Triggered on new user creation and creates a welcome session
+ * - scheduledRollRevision: Daily cron that checks upcoming election reminders
  * - exportAnalytics: Admin-callable function to export platform stats
  */
 
@@ -13,7 +13,7 @@ const admin = require("firebase-admin");
 admin.initializeApp();
 const db = admin.firestore();
 
-// ─── Track Analytics on new chat message ─────────────────────────────────────
+// Track analytics on new chat message.
 exports.trackChatAnalytics = functions.firestore
   .document("chatSessions/{sessionId}/messages/{messageId}")
   .onCreate(async (snap, context) => {
@@ -30,11 +30,10 @@ exports.trackChatAnalytics = functions.firestore
     return null;
   });
 
-// ─── On new user registration ─────────────────────────────────────────────────
+// Create default records for new user registration.
 exports.onNewUser = functions.firestore
   .document("users/{uid}")
-  .onCreate(async (snap, context) => {
-    const user = snap.data();
+  .onCreate(async (_snap, context) => {
     const uid = context.params.uid;
 
     // Increment user counter
@@ -52,7 +51,7 @@ exports.onNewUser = functions.firestore
     return null;
   });
 
-// ─── On eligibility check ─────────────────────────────────────────────────────
+// Update platform counters when users complete eligibility checks.
 exports.onEligibilityCheck = functions.firestore
   .document("eligibilityChecks/{checkId}")
   .onCreate(async (snap, context) => {
@@ -64,7 +63,7 @@ exports.onEligibilityCheck = functions.firestore
     return null;
   });
 
-// ─── Scheduled: Daily election date checker ───────────────────────────────────
+// Scheduled daily election date checker.
 exports.dailyElectionCheck = functions.pubsub
   .schedule("0 9 * * *") // 9 AM daily
   .timeZone("Asia/Kolkata")
@@ -89,11 +88,11 @@ exports.dailyElectionCheck = functions.pubsub
     return null;
   });
 
-// ─── Callable: Export analytics (admin only) ──────────────────────────────────
+// Callable analytics export for admins only.
 exports.exportAnalytics = functions.https.onCall(async (data, context) => {
   // Verify admin
   if (!context.auth) throw new functions.https.HttpsError("unauthenticated", "Must be logged in");
-  
+
   const userDoc = await db.collection("users").doc(context.auth.uid).get();
   if (userDoc.data()?.role !== "admin") {
     throw new functions.https.HttpsError("permission-denied", "Admin access required");

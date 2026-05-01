@@ -1,9 +1,9 @@
-// src/pages/BoothLocatorPage.jsx
+﻿// src/pages/BoothLocatorPage.jsx
 import { useState, useEffect, useRef } from "react";
 import { useLanguage } from "../context/LanguageContext";
 import { trackEvent } from "../services/firebase";
 
-// Mock booths data — in production, fetch from Firestore
+// Mock booths data  in production, fetch from Firestore
 const MOCK_BOOTHS = [
   { id: 1, name: "Government Primary School, Sector 15", address: "Sector 15, Chandigarh - 160015", distance: "0.8 km", lat: 30.7355, lng: 76.7883, voters: 1240 },
   { id: 2, name: "Community Hall, Sector 17", address: "Sector 17, Chandigarh - 160017", distance: "1.2 km", lat: 30.7410, lng: 76.7840, voters: 980 },
@@ -77,7 +77,7 @@ function MapPlaceholder({ booths }) {
       ctx.fillStyle = "#0f172a";
       ctx.font = "11px sans-serif";
       ctx.textAlign = "center";
-      ctx.fillText(booth.name.slice(0, 18) + "…", x, y + 32);
+      ctx.fillText(booth.name.slice(0, 18) + "", x, y + 32);
     });
 
     // User location
@@ -123,7 +123,7 @@ function MapPlaceholder({ booths }) {
           borderRadius: 8, padding: "6px 10px", fontSize: 11, fontWeight: 600, color: "var(--text-secondary)",
         }}
       >
-        📍 Demo Map — Configure Google Maps API for live data
+         Demo Map  Configure Google Maps API for live data
       </div>
     </div>
   );
@@ -149,7 +149,7 @@ export default function BoothLocatorPage() {
   return (
     <div style={{ maxWidth: 1100, margin: "0 auto" }}>
       <div className="page-header">
-        <h1 className="page-title">📍 {t("booth")}</h1>
+        <h1 className="page-title"> {t("booth")}</h1>
         <p className="page-subtitle">Find your assigned polling booth using your Voter ID or address</p>
       </div>
 
@@ -179,7 +179,7 @@ export default function BoothLocatorPage() {
             disabled={loading || !epicNumber.trim()}
             style={{ marginBottom: 0, alignSelf: "flex-start", marginTop: 22 }}
           >
-            {loading ? "Searching..." : "🔍 Find My Booth"}
+            {loading ? "Searching..." : " Find My Booth"}
           </button>
         </form>
       </div>
@@ -193,7 +193,7 @@ export default function BoothLocatorPage() {
               style={{ padding: 0, overflow: "hidden" }}
             >
               <div style={{ padding: "14px 18px", borderBottom: "1px solid var(--border-light)" }}>
-                <span style={{ fontWeight: 700, fontSize: 14 }}>📍 Nearby Polling Booths</span>
+                <span style={{ fontWeight: 700, fontSize: 14 }}> Nearby Polling Booths</span>
               </div>
               <MapPlaceholder booths={MOCK_BOOTHS} />
             </div>
@@ -205,9 +205,9 @@ export default function BoothLocatorPage() {
                 <div style={{ fontSize: 16, fontWeight: 700 }}>{MOCK_BOOTHS[0].name}</div>
                 <div style={{ fontSize: 13, color: "var(--text-secondary)", marginTop: 4 }}>{MOCK_BOOTHS[0].address}</div>
                 <div style={{ display: "flex", gap: 10, marginTop: 12, flexWrap: "wrap" }}>
-                  <span className="badge badge-green">✓ Active Booth</span>
-                  <span className="badge badge-blue">🚶 {MOCK_BOOTHS[0].distance}</span>
-                  <span className="badge badge-purple">👥 {MOCK_BOOTHS[0].voters.toLocaleString()} voters</span>
+                  <span className="badge badge-green"> Active Booth</span>
+                  <span className="badge badge-blue"> {MOCK_BOOTHS[0].distance}</span>
+                  <span className="badge badge-purple"> {MOCK_BOOTHS[0].voters.toLocaleString()} voters</span>
                 </div>
                 <div style={{ marginTop: 12 }}>
                   <a
@@ -216,7 +216,7 @@ export default function BoothLocatorPage() {
                     rel="noopener noreferrer"
                     className="btn btn-secondary btn-sm"
                   >
-                    🗺️ Get Directions
+                     Get Directions
                   </a>
                 </div>
               </div>
@@ -244,7 +244,7 @@ export default function BoothLocatorPage() {
                   {selectedBooth === booth.id && (
                     <div style={{ marginTop: 10, paddingTop: 10, borderTop: "1px solid var(--border-light)" }}>
                       <div style={{ fontSize: 12, color: "var(--text-secondary)", marginBottom: 8 }}>
-                        👥 Registered voters: {booth.voters.toLocaleString()}
+                         Registered voters: {booth.voters.toLocaleString()}
                       </div>
                       <a
                         href={`https://maps.google.com/?q=${encodeURIComponent(booth.address)}`}
@@ -253,7 +253,7 @@ export default function BoothLocatorPage() {
                         className="btn btn-ghost btn-sm"
                         onClick={(e) => e.stopPropagation()}
                       >
-                        View on Google Maps ↗
+                        View on Google Maps
                       </a>
                     </div>
                   )}
@@ -265,13 +265,13 @@ export default function BoothLocatorPage() {
           {/* Booth day info */}
           <div className="glass-card" style={{ padding: 20, marginTop: 20 }}>
             <h3 style={{ fontFamily: "var(--font-display)", fontSize: 15, fontWeight: 700, marginBottom: 14 }}>
-              📋 What to Bring on Polling Day
+               What to Bring on Polling Day
             </h3>
             <div className="grid-3" style={{ gap: 12 }}>
               {[
-                { icon: "🪪", title: "Voter ID (EPIC)", desc: "Your primary identity document at the booth" },
-                { icon: "📱", title: "eEPIC on Phone", desc: "Digital copy accepted as valid ID" },
-                { icon: "🕐", title: "Go Early", desc: "Polls open 7 AM. Avoid afternoon queues" },
+                { icon: "", title: "Voter ID (EPIC)", desc: "Your primary identity document at the booth" },
+                { icon: "", title: "eEPIC on Phone", desc: "Digital copy accepted as valid ID" },
+                { icon: "", title: "Go Early", desc: "Polls open 7 AM. Avoid afternoon queues" },
               ].map((item, i) => (
                 <div key={i} style={{ display: "flex", gap: 12, alignItems: "flex-start" }}>
                   <div style={{ fontSize: 24, flexShrink: 0 }}>{item.icon}</div>
@@ -288,7 +288,7 @@ export default function BoothLocatorPage() {
 
       {!searched && (
         <div className="glass-card" style={{ padding: 40, textAlign: "center", marginTop: 20 }}>
-          <div style={{ fontSize: 48, marginBottom: 16 }}>🗺️</div>
+          <div style={{ fontSize: 48, marginBottom: 16 }}></div>
           <h3 style={{ fontFamily: "var(--font-display)", fontSize: 18, fontWeight: 700, marginBottom: 8 }}>
             Locate Your Polling Booth
           </h3>

@@ -1,10 +1,11 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+﻿import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 describe("gemini service helpers", () => {
   beforeEach(() => {
     vi.resetModules();
     vi.restoreAllMocks();
     globalThis.__TEST_GEMINI_API_KEY__ = "";
+    globalThis.__TEST_API_BASE_URL__ = "";
   });
 
   afterEach(async () => {
@@ -12,6 +13,7 @@ describe("gemini service helpers", () => {
     module.clearCache();
     vi.unstubAllGlobals();
     delete globalThis.__TEST_GEMINI_API_KEY__;
+    delete globalThis.__TEST_API_BASE_URL__;
   });
 
   it("builds a normalized cache key", async () => {
@@ -57,6 +59,29 @@ describe("gemini service helpers", () => {
     module.clearCache();
 
     await expect(module.askGemini("Explain NOTA")).rejects.toThrow("Invalid API key");
+  });
+
+  it("uses the backend chat proxy when an API base URL is configured", async () => {
+    const fetchSpy = vi.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({ response: "Backend proxy answer", cached: false }),
+    });
+    vi.stubGlobal("fetch", fetchSpy);
+
+    const module = await import("./gemini.js");
+    globalThis.__TEST_API_BASE_URL__ = "https://api.example.com/";
+    module.clearCache();
+
+    await expect(module.askGemini("How to vote?", "hi", [{ role: "user", content: "Earlier" }]))
+      .resolves.toBe("Backend proxy answer");
+    expect(fetchSpy).toHaveBeenCalledWith(
+      "https://api.example.com/api/chat/",
+      expect.objectContaining({ method: "POST" }),
+    );
+
+    const requestBody = JSON.parse(fetchSpy.mock.calls[0][1].body);
+    expect(requestBody).toMatchObject({ message: "How to vote?", language: "hi" });
+    expect(requestBody.history).toHaveLength(1);
   });
 
   it("rejects empty prompts before calling the API", async () => {

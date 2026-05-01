@@ -1,4 +1,4 @@
-// src/pages/CalendarPage.jsx
+﻿// src/pages/CalendarPage.jsx
 import { useState } from "react";
 
 const MONTHS = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
@@ -9,7 +9,7 @@ const EVENTS_2025 = {
   "2025-01-25": [{ title: "National Voters' Day", type: "national" }],
   "2025-02-08": [{ title: "Delhi Assembly Election Results", type: "result" }],
   "2025-03-15": [{ title: "Bihar Election Date Announcement", type: "announcement" }],
-  "2025-04-05": [{ title: "Voter Registration Deadline — Bihar", type: "deadline" }],
+  "2025-04-05": [{ title: "Voter Registration Deadline  Bihar", type: "deadline" }],
   "2025-10-15": [{ title: "Bihar Assembly Elections Phase 1", type: "polling" }],
   "2025-11-01": [{ title: "Bihar Election Results", type: "result" }],
 };
@@ -20,7 +20,7 @@ const EVENT_COLORS = {
 };
 
 const EVENT_ICONS = {
-  admin: "📋", national: "🇮🇳", result: "📊", announcement: "📢", deadline: "⚠️", polling: "🗳️",
+  admin: "", national: "", result: "", announcement: "", deadline: "", polling: "",
 };
 
 export function CalendarPage() {
@@ -49,7 +49,7 @@ export function CalendarPage() {
   return (
     <div style={{ maxWidth: 900, margin: "0 auto" }}>
       <div className="page-header">
-        <h1 className="page-title">🗓 Election Calendar</h1>
+        <h1 className="page-title"> Election Calendar</h1>
         <p className="page-subtitle">Important election dates, deadlines, and events for 2025</p>
       </div>
 
@@ -62,7 +62,7 @@ export function CalendarPage() {
               className="btn btn-ghost btn-sm"
               onClick={() => setCurrentDate(new Date(year, month - 1, 1))}
               aria-label="Previous month"
-            >←</button>
+            ></button>
             <span style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: 16 }}>
               {MONTHS[month]} {year}
             </span>
@@ -70,7 +70,7 @@ export function CalendarPage() {
               className="btn btn-ghost btn-sm"
               onClick={() => setCurrentDate(new Date(year, month + 1, 1))}
               aria-label="Next month"
-            >→</button>
+            ></button>
           </div>
 
           {/* Day headers */}
@@ -159,7 +159,7 @@ export function CalendarPage() {
           )}
 
           {/* Upcoming events list */}
-          <h3 style={{ fontSize: 15, fontWeight: 700, marginBottom: 14 }}>📌 All Events {year}</h3>
+          <h3 style={{ fontSize: 15, fontWeight: 700, marginBottom: 14 }}> All Events {year}</h3>
           <div className="glass-card" style={{ padding: 0, overflow: "hidden" }}>
             {Object.entries(EVENTS_2025).sort().map(([date, events], i, arr) => (
               <div
