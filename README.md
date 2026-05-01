@@ -5,7 +5,7 @@ AI-powered civic education platform that helps Indian voters understand registra
 ## Submission Links
 
 - GitHub Repository: `https://github.com/AnuragPrajapati05/election-education-assistant`
-- Live Demo: `https://vote-india-web-1057811226634.asia-south1.run.app`
+- Live Demo: `https://vote-india-web-3tpn7dvrca-el.a.run.app`
 
 ## Chosen Vertical
 

@@ -20,6 +20,7 @@ from routes.eligibility import analytics_router, booths_router, router as eligib
 DEFAULT_ALLOWED_ORIGINS = (
     "http://localhost:5173",
     "http://127.0.0.1:5173",
+    "https://vote-india-web-3tpn7dvrca-el.a.run.app",
     "https://vote-india-web-1057811226634.asia-south1.run.app",
 )
 
