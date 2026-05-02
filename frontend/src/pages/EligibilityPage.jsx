@@ -1,4 +1,4 @@
-﻿// src/pages/EligibilityPage.jsx
+// src/pages/EligibilityPage.jsx
 import { useState } from "react";
 import { useLanguage } from "../context/LanguageContext";
 import { useAuth } from "../context/AuthContext";
@@ -94,8 +94,8 @@ export default function EligibilityPage() {
   return (
     <div style={{ maxWidth: 800, margin: "0 auto" }}>
       <div className="page-header">
-        <h1 className="page-title"> {t("eligibility")}</h1>
-        <p className="page-subtitle">Check if you are eligible to vote in Indian elections</p>
+        <h1 className="page-title">{t("eligibility")}</h1>
+        <p className="page-subtitle" id="elig-subtitle">Check if you are eligible to vote in Indian elections based on Indian electoral law.</p>
       </div>
 
       <div className="grid-2" style={{ gap: 24, alignItems: "start" }}>
@@ -106,18 +106,21 @@ export default function EligibilityPage() {
           </h2>
 
           <div className="form-group">
-            <label className="form-label" htmlFor="dob">Date of Birth *</label>
+            <label className="form-label" htmlFor="dob">Date of Birth <span aria-hidden="true">*</span></label>
             <input
               id="dob" type="date" className="form-input"
               value={form.dob}
               max={new Date().toISOString().split("T")[0]}
               onChange={(e) => setForm({ ...form, dob: e.target.value })}
+              aria-required="true"
+              aria-describedby="dob-hint"
             />
+            <span id="dob-hint" className="sr-only">Your date of birth is used to calculate your age against the electoral qualifying date of 1 January.</span>
           </div>
 
           <div className="form-group">
-            <label className="form-label">Are you an Indian citizen? *</label>
-            <div style={{ display: "flex", gap: 10 }}>
+            <span id="citizen-label" className="form-label">Are you an Indian citizen? <span aria-hidden="true">*</span></span>
+            <div role="group" aria-labelledby="citizen-label" style={{ display: "flex", gap: 10 }}>
               {["yes", "no"].map((v) => (
                 <button
                   key={v}
@@ -126,7 +129,7 @@ export default function EligibilityPage() {
                   onClick={() => setForm({ ...form, citizen: v })}
                   aria-pressed={form.citizen === v}
                 >
-                  {v === "yes" ? " Yes" : " No"}
+                  {v === "yes" ? "✓ Yes" : "✕ No"}
                 </button>
               ))}
             </div>
@@ -145,8 +148,8 @@ export default function EligibilityPage() {
           </div>
 
           <div className="form-group">
-            <label className="form-label">Do you already have a Voter ID card? *</label>
-            <div style={{ display: "flex", gap: 10 }}>
+            <span id="voterid-label" className="form-label">Do you already have a Voter ID card? <span aria-hidden="true">*</span></span>
+            <div role="group" aria-labelledby="voterid-label" style={{ display: "flex", gap: 10 }}>
               {[{ v: "yes", label: "Yes, I have one" }, { v: "no", label: "No, I need to register" }].map(({ v, label }) => (
                 <button
                   key={v}
@@ -162,8 +165,8 @@ export default function EligibilityPage() {
           </div>
 
           <div className="form-group" style={{ marginBottom: 24 }}>
-            <label className="form-label">Are you disqualified from voting under any law?</label>
-            <div style={{ display: "flex", gap: 10 }}>
+            <span id="disq-label" className="form-label">Are you disqualified from voting under any law?</span>
+            <div role="group" aria-labelledby="disq-label" style={{ display: "flex", gap: 10 }}>
               {["no", "yes"].map((v) => (
                 <button
                   key={v}
@@ -183,7 +186,8 @@ export default function EligibilityPage() {
             style={{ width: "100%" }}
             onClick={handleCheck}
             disabled={!allFilled}
-            aria-label="Check eligibility"
+            aria-label="Check my voter eligibility"
+            aria-describedby="elig-subtitle"
           >
             Check My Eligibility
           </button>
@@ -192,9 +196,14 @@ export default function EligibilityPage() {
         {/* Result & Checklist */}
         <div>
           {result && (
-            <div className={`eligibility-result animate-in ${result.eligible ? "eligible" : "ineligible"}`}>
+            <div
+              className={`eligibility-result animate-in ${result.eligible ? "eligible" : "ineligible"}`}
+              role="status"
+              aria-live="polite"
+              aria-label={result.eligible ? "Eligibility result: Eligible to vote" : "Eligibility result: Not currently eligible"}
+            >
               <div className="eligibility-icon" aria-hidden="true">
-                {result.eligible ? "" : ""}
+                {result.eligible ? "✅" : "❌"}
               </div>
               <h3 style={{ fontFamily: "var(--font-display)", fontSize: 20, fontWeight: 800, color: result.eligible ? "#059669" : "#dc2626", marginBottom: 8 }}>
                 {result.eligible ? "You are eligible to vote!" : "Not currently eligible"}
@@ -202,8 +211,8 @@ export default function EligibilityPage() {
               <div style={{ display: "flex", flexDirection: "column", gap: 8, textAlign: "left", marginTop: 16 }}>
                 {result.results.map((r, i) => (
                   <div key={i} style={{ display: "flex", gap: 10, alignItems: "flex-start" }}>
-                    <span style={{ flexShrink: 0, fontSize: 16 }}>
-                      {r.pass === true ? "" : r.pass === false ? "" : ""}
+                    <span style={{ flexShrink: 0, fontSize: 16 }} aria-hidden="true">
+                      {r.pass === true ? "✅" : r.pass === false ? "❌" : "ℹ️"}
                     </span>
                     <span style={{ fontSize: 13, color: "var(--text-secondary)" }}>{r.text}</span>
                   </div>

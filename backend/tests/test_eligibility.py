@@ -1,4 +1,4 @@
-﻿"""Backend tests for eligibility, auxiliary routes, and API validation."""
+"""Backend tests for eligibility, auxiliary routes, API validation, and new endpoints."""
 
 import os
 import sys
@@ -186,3 +186,30 @@ class TestApiRoutes:
         body = response.json()
         assert body["assigned_booth"]["constituency"] == "Chandigarh"
         assert len(body["nearby_booths"]) == 2
+
+    def test_readiness_probe_returns_ready(self, client):
+        response = client.get("/api/ready")
+        assert response.status_code == 200
+        body = response.json()
+        assert body["ready"] is True
+        assert "version" in body
+
+    def test_method_not_allowed_returns_json(self, client):
+        # DELETE is not registered for /api/health
+        response = client.delete("/api/health")
+        assert response.status_code in (404, 405)
+
+    def test_booth_search_by_epic(self, client):
+        response = client.get("/api/booths/search?epic=ABC1234567")
+        assert response.status_code == 200
+        body = response.json()
+        assert "assigned_booth" in body
+
+    def test_booth_search_rejects_short_epic(self, client):
+        response = client.get("/api/booths/search?epic=AB")
+        assert response.status_code == 400
+
+    def test_analytics_stats_has_language_breakdown(self, client):
+        response = client.get("/api/analytics/stats")
+        body = response.json()
+        assert body["languageBreakdown"]["en"] + body["languageBreakdown"]["hi"] == 100

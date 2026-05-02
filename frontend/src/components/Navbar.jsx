@@ -1,4 +1,4 @@
-﻿import { useState } from "react";
+import { useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { useLanguage, LANGUAGES } from "../context/LanguageContext";
 import { logOut } from "../services/firebase";
@@ -56,16 +56,19 @@ export default function Navbar({ onMenuToggle, onAuthClick }) {
               className="btn btn-ghost btn-sm user-menu-trigger"
               onClick={() => setShowUserMenu((p) => !p)}
               aria-expanded={showUserMenu}
-              aria-haspopup="true"
+              aria-haspopup="menu"
+              aria-controls="user-dropdown-menu"
+              aria-label={`User menu for ${user.displayName?.split(" ")[0] || "User"}`}
             >
               <UserAvatar user={user} size={28} />
               <span style={{ maxWidth: 100, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
                 {user.displayName?.split(" ")[0] || "User"}
               </span>
-              <span aria-hidden="true">v</span>
+              <span aria-hidden="true">{showUserMenu ? "▲" : "▼"}</span>
             </button>
             {showUserMenu && (
               <div
+                id="user-dropdown-menu"
                 className="glass-card-strong"
                 style={{
                   position: "absolute",
@@ -76,6 +79,7 @@ export default function Navbar({ onMenuToggle, onAuthClick }) {
                   zIndex: 200,
                 }}
                 role="menu"
+                aria-label="User account menu"
               >
                 <div style={{ padding: "8px 16px", borderBottom: "1px solid var(--border-light)", marginBottom: 4 }}>
                   <div style={{ fontSize: 13, fontWeight: 600 }}>{user.displayName}</div>
@@ -84,8 +88,8 @@ export default function Navbar({ onMenuToggle, onAuthClick }) {
                     {user.role}
                   </span>
                 </div>
-                <button className="nav-item" role="menuitem" onClick={handleLogout}>
-                  <span>Exit</span> {t("logout")}
+                <button className="nav-item" role="menuitem" onClick={handleLogout} aria-label="Log out of your account">
+                  <span aria-hidden="true">↩</span> {t("logout")}
                 </button>
               </div>
             )}
